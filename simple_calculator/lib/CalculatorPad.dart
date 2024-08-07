@@ -20,7 +20,7 @@ class _CalculatorPadState extends State<CalculatorPad> {
   void calculateResult() {
     try {
       final expression = Expression.parse(currentEquation);
-      final evaluator = const ExpressionEvaluator();
+      const evaluator = ExpressionEvaluator();
       final result = evaluator.eval(expression, {});
       setState(() {
         previousEquation = currentEquation;
@@ -92,9 +92,15 @@ class _CalculatorPadState extends State<CalculatorPad> {
                 children: [
                   TableRow(
                     children: [
-                      _buildButton('C', Colors.yellow, Colors.black, () {
+                      _buildButton('AC', Colors.yellow, Colors.black, () {
                         setState(() {
                           currentEquation = '';
+                          previousEquation = '';
+                        });
+                      }),
+                      _buildButton('C', Colors.limeAccent, Colors.black, () {
+                        setState(() {
+                          previousEquation = '';
                         });
                       }),
                       _buildIconButton(CupertinoIcons.divide, Colors.white, Colors.deepPurple, () {
@@ -102,13 +108,6 @@ class _CalculatorPadState extends State<CalculatorPad> {
                       }),
                       _buildIconButton(CupertinoIcons.multiply, Colors.white, Colors.deepPurple, () {
                         updateEquation('*');
-                      }),
-                      _buildIconButton(Icons.backspace_outlined, Colors.white, Colors.deepPurple, () {
-                        if (currentEquation.isNotEmpty) {
-                          setState(() {
-                            currentEquation = currentEquation.substring(0, currentEquation.length - 1);
-                          });
-                        }
                       }),
                     ],
                   ),
@@ -155,12 +154,13 @@ class _CalculatorPadState extends State<CalculatorPad> {
                       _buildButton('3', Colors.white, Colors.black, () {
                         updateEquation('3');
                       }),
-                      TableCell(
-                        verticalAlignment: TableCellVerticalAlignment.fill,
-                        child: _buildIconButton(CupertinoIcons.equal, Colors.deepPurple, Colors.white, () {
-                          calculateResult();
-                        }),
-                      )
+                      _buildIconButton(Icons.backspace_outlined, Colors.white, Colors.deepPurple, () {
+                        if (currentEquation.isNotEmpty) {
+                          setState(() {
+                            currentEquation = currentEquation.substring(0, currentEquation.length - 1);
+                          });
+                        }
+                      }),
                     ],
                   ),
                   TableRow(
@@ -174,10 +174,9 @@ class _CalculatorPadState extends State<CalculatorPad> {
                       _buildButton('.', Colors.white, Colors.black, () {
                         updateEquation('.');
                       }),
-                      TableCell(
-                        verticalAlignment: TableCellVerticalAlignment.fill,
-                        child: Container(), // Empty cell
-                      ),
+                      _buildIconButton(CupertinoIcons.equal, Colors.deepPurple, Colors.white, () {
+                        calculateResult();
+                      })
                     ],
                   ),
                 ],
